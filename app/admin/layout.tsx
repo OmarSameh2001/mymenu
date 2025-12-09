@@ -1,5 +1,5 @@
 import Link from "next/link";
-import ProtectedRoute from "../components/protected/protected";
+import ProtectedRoute from "../_components/utils/protected/protected";
 
 export default function AdminLayout({
   children,

@@ -31,4 +31,8 @@ axiosInstance.interceptors.response.use(
   }
 );
 
-export default axiosInstance;
+const axiosAuth: AxiosInstance = axios.create({
+  baseURL: url + '/api',
+});
+
+export { axiosAuth, axiosInstance };

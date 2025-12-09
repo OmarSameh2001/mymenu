@@ -1,5 +1,5 @@
 "use client";
-import axiosInstance from "@/app/_services/axios";
+import { axiosAuth, axiosInstance } from "@/app/_services/axios";
 import { createContext, useContext, useEffect, useState } from "react";
 
 export const AuthContext = createContext<{
@@ -20,14 +20,14 @@ export const AuthContext = createContext<{
 
 export const useAuth = () => useContext(AuthContext);
 
-export const AuthProvider = ({ children }: any) => {
+export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [token, setToken] = useState<string | null>(null);
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
 
   useEffect(() => {
     if (!token) {
-      axiosInstance
+      axiosAuth
         .post("/user/refresh", {}, { withCredentials: true })
         .then((response) => {
           setToken(response.data.accessToken);

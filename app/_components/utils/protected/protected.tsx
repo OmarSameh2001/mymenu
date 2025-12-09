@@ -10,11 +10,7 @@ export default function ProtectedRoute({
   children: React.ReactNode;
 }) {
   const { token, isLoading } = useContext(AuthContext);
-  const [mounted, setMounted] = useState(false);
   const router = useRouter();
-  useEffect(() => {
-    setMounted(true);
-  }, []);
   return (
     <>
       {isLoading ? (
@@ -22,7 +18,7 @@ export default function ProtectedRoute({
       ) : !isLoading && token ? (
         children
       ) : (
-        router.replace("/login")
+        router.replace("/user/login")
       )}
     </>
   );
@@ -43,7 +39,7 @@ export function ProtectedAdminRoute({
       ) : !isLoading && token && isAdmin ? (
         children
       ) : (
-        router.replace("/login")
+        router.replace("/user/login")
       )}
     </>
   );

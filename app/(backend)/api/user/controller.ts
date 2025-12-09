@@ -48,10 +48,12 @@ export const refreshAccessToken = async (req: NextRequest) => {
     }
 
     const newAccessToken = generateAccessToken(user);
-
-    return NextResponse.json({
-      accessToken: newAccessToken,
-    });
+    return NextResponse.json(
+      {
+        accessToken: newAccessToken,
+      },
+      { status: 200 }
+    );;
   } catch (err) {
     return NextResponse.json(
       { error: 'Refresh token expired' },
@@ -154,9 +156,7 @@ export const loginUser = async (req: NextRequest) => {
     const accessToken = generateAccessToken(user);
     const refreshToken = generateRefreshToken(user);
 
-    // Save refresh token in DB
-    user.refreshToken = refreshToken;
-    await user.save();
+    await User.updateOne({ _id: user._id }, { refreshToken });
 
     // Response
     const res = NextResponse.json(
@@ -178,7 +178,7 @@ export const loginUser = async (req: NextRequest) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
-      path: '/api/auth/refresh',
+      path: '/api/user/refresh',
       maxAge: 7 * 24 * 60 * 60, // 7 days
     });
 
