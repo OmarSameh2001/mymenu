@@ -1,4 +1,5 @@
 import Link from "next/link";
+import ProtectedRoute from "../components/protected/protected";
 
 export default function AdminLayout({
   children,
@@ -6,7 +7,7 @@ export default function AdminLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <>
+    <ProtectedRoute>
       <nav className="flex justify-center border-b p-4 gap-4">
         <Link href="/admin/users">
           Users
@@ -16,6 +17,6 @@ export default function AdminLayout({
         </Link>
       </nav>
       {children}
-    </>
+    </ProtectedRoute>
   );
 }
