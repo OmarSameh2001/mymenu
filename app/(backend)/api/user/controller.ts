@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import User, { IUser } from './model';
 import jwt from 'jsonwebtoken';
-import { connectDB } from '@/lib/db';
+import { connectDB } from '@/app/(backend)/_lib/db';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-this';
 
@@ -43,6 +43,7 @@ export const refreshAccessToken = async (req: NextRequest) => {
     ) as { id: string };
 
     const user = await User.findById(decoded.id).select('+refreshToken');
+
     if (!user || user.refreshToken !== refreshToken) {
       return NextResponse.json({ error: 'Invalid refresh token' }, { status: 403 });
     }

@@ -14,26 +14,24 @@ async function init() {
 }
 
 // Upload a file
-export async function uploadFile(filePath: string, fileName: string) {
+async function uploadFile(file: File) {
   try {
     // Initialize auth first
     await init();
 
-    if (!filePath || !fileName) {
-      throw new Error("File path and file name are required");
-    } else if (!fileName) {
-      fileName = filePath.split("/").pop() || "unnamed-file";
+    if (!file) {
+      throw new Error("File is required");
     }
-
+    console.log("Uploading file:", file.name);
     // Get upload URL for your bucket
     const uploadUrlResponse = await b2.getUploadUrl({
       bucketId: process.env.B2_BUCKET_ID || "",
     });
 
-    // Upload the file
-    const fs = require("fs");
-    const fileBuffer = fs.readFileSync("menu-image.jpg");
+    console.log("Upload URL:", uploadUrlResponse);
 
+    const fileBuffer = Buffer.from(await file.arrayBuffer())
+    
     const uploadResponse = await b2.uploadFile({
       uploadUrl: uploadUrlResponse.data.uploadUrl,
       uploadAuthToken: uploadUrlResponse.data.authorizationToken,
@@ -41,15 +39,15 @@ export async function uploadFile(filePath: string, fileName: string) {
       data: fileBuffer,
     });
 
-    console.log("Uploaded file:", uploadResponse.data.fileName);
-    return uploadResponse.data;
+    console.log("Uploaded file:", uploadResponse);
+    return uploadResponse;
   } catch (error) {
     console.error("Error uploading file:", error);
     throw error;
   }
 }
 
-export async function deleteFile(fileName: string, fileId: string) {
+async function deleteFile(fileName: string, fileId: string) {
   try {
     // Initialize auth first
     await init();
@@ -69,3 +67,12 @@ export async function deleteFile(fileName: string, fileId: string) {
     throw error;
   }
 }
+
+const Bucket = {
+  uploadFile,
+  deleteFile,
+};
+
+
+
+export default Bucket;

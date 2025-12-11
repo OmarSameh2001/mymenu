@@ -11,16 +11,15 @@ export default function ProtectedRoute({
 }) {
   const { token, isLoading } = useContext(AuthContext);
   const router = useRouter();
+
+  useEffect(() => {
+    if (!isLoading && !token) {
+      router.replace("/user/login");
+    }
+  }, [isLoading, token, router]);
+
   return (
-    <>
-      {isLoading ? (
-        <LoadingPage />
-      ) : !isLoading && token ? (
-        children
-      ) : (
-        router.replace("/user/login")
-      )}
-    </>
+    <>{isLoading ? <LoadingPage /> : !isLoading && token ? children : null}</>
   );
 }
 
@@ -32,14 +31,41 @@ export function ProtectedAdminRoute({
   const { token, isLoading, isAdmin } = useContext(AuthContext);
   const router = useRouter();
 
+  useEffect(() => {
+    if (!isLoading && !token && !isAdmin) {
+      router.replace("/user/login");
+    }
+  }, [isLoading, token, isAdmin, router]);
+
   return (
     <>
       {isLoading ? (
         <LoadingPage />
       ) : !isLoading && token && isAdmin ? (
         children
+      ) : null}
+    </>
+  );
+}
+
+export function NonProtectedRoute({ children }: { children: React.ReactNode }) {
+  const { token, isLoading } = useContext(AuthContext);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!isLoading && token) {
+      router.replace("/");
+    }
+  }, [isLoading, token, router]);
+
+  return (
+    <>
+      {isLoading ? (
+        <LoadingPage />
+      ) : !isLoading && !token ? (
+        children
       ) : (
-        router.replace("/user/login")
+        null
       )}
     </>
   );

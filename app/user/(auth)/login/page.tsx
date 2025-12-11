@@ -13,6 +13,7 @@ export default function LoginPage() {
     string,
     React.Dispatch<React.SetStateAction<string>>
   ] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const { setIsAdmin, setToken } = useContext(AuthContext);
 
@@ -20,7 +21,7 @@ export default function LoginPage() {
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-
+    setIsLoading(true);
     await axiosAuth
       .post("/user/login", {
         email,
@@ -30,6 +31,7 @@ export default function LoginPage() {
         console.log(response);
         setToken && setToken(response.data.accessToken);
         setIsAdmin && setIsAdmin(response.data.user.type === "admin");
+        setIsLoading(false);
         if (response.data.user.type === "admin") {
           router.replace("/admin");
         } else {
@@ -37,6 +39,7 @@ export default function LoginPage() {
         }
       })
       .catch((error) => {
+        setIsLoading(false);
         console.log(error);
       });
   }
@@ -115,6 +118,7 @@ export default function LoginPage() {
             <div>
               <button
                 type="submit"
+                disabled={isLoading}
                 className="flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm/6 font-semibold text-white hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 cursor-pointer"
               >
                 Sign in

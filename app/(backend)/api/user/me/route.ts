@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCurrentUser } from "../controller";
-import { authMiddleware } from "@/middleware/auth";
+import { authMiddleware } from "@/app/(backend)/_middleware/auth";
 
 export async function GET(req: NextRequest) {
   const authResult = await authMiddleware(req);

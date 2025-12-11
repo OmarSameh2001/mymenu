@@ -9,7 +9,7 @@ import {
   deleteUser,
   getCurrentUser,
 } from './controller';
-import { authMiddleware, adminMiddleware } from '@/middleware/auth';
+import { authMiddleware, adminMiddleware } from '@/app/(backend)/_middleware/auth';
 
 export async function POST(req: NextRequest) {
   const pathname = req.nextUrl.pathname;
